@@ -11,8 +11,9 @@ layerA = new Layer
 
 layerA.centerY()
 layerA.x = 10
+layerA.draggable.vertical = true
 
-animateOpacity = () ->
+animatePosition = () ->
 	if looping
 		targetX = Screen.width - layerA.width - 10
 		targetX = 10 if layerA.x != 10
@@ -22,9 +23,22 @@ animateOpacity = () ->
 			curve: "ease"
 			time: 1
 
-layerA.on Events.AnimationStop, animateOpacity
+layerA.on Events.AnimationStop, animatePosition
 
 looping = false
+hasDragged = false
+
 layerA.on 'click', () ->
-	looping = !looping
-	animateOpacity()
+	if !hasDragged
+		looping = !looping
+		animatePosition()
+
+layerA.on Event.DragStart, () -> 
+	hasDragged = true
+	layerA.animateStop()
+
+layerA.on Events.DragEnd, () ->
+	if hasDragged
+		startedDrag = false
+		looping = true
+		animatePosition()
