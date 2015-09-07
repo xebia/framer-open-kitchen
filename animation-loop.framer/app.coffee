@@ -9,19 +9,22 @@ layerA = new Layer
 	backgroundColor: "#fff"
 	borderRadius: 6
 
-layerA.center()
+layerA.centerY()
+layerA.x = 10
 
 animateOpacity = () ->
-
-	targetOpacity = 1
-	targetOpacity = 0.5 if layerA.opacity is 1
-
-	layerA.animate
-		properties:
-			opacity: targetOpacity 
-		curve: "ease"
-		time: 1
+	if looping
+		targetX = Screen.width - layerA.width - 10
+		targetX = 10 if layerA.x != 10
+		layerA.animate
+			properties:
+				x: targetX 
+			curve: "ease"
+			time: 1
 
 layerA.on Events.AnimationStop, animateOpacity
 
-animateOpacity()
+looping = false
+layerA.on 'click', () ->
+	looping = !looping
+	animateOpacity()
